@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Taggables;
+use App\Api\V1\Models\Taggables;
 
 class TaggablesTableSeeder extends Seeder {
 

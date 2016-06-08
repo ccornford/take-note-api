@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Note;
+use App\Api\V1\Models\Note;
 
 class NoteTableSeeder extends Seeder {
 
