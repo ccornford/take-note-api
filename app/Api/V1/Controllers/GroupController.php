@@ -46,6 +46,11 @@ class GroupController extends ApiController {
     {
         $group = $this->groupRepository->findOrFail($id);
 
+        if( ! $group )
+        {
+            return $this->response->errorNotFound();
+        }
+
         return $this->response->item($group, new GroupTransformer);
     }
 
@@ -71,7 +76,10 @@ class GroupController extends ApiController {
      */
     public function destroy($id)
     {
-        $this->groupRepository->findAndDelete($id);
+        if( ! $this->groupRepository->findAndDelete($id))
+        {
+            return $this->response->errorNotFound();
+        }
     }
 
 }

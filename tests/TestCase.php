@@ -17,7 +17,6 @@ class TestCase extends Laravel\Lumen\Testing\TestCase
     {
         parent::setUp();
         Artisan::call('migrate');
-        Artisan::call('db:seed');
     }
 
     public function tearDown()
@@ -25,4 +24,18 @@ class TestCase extends Laravel\Lumen\Testing\TestCase
         Artisan::call('migrate:reset');
         parent::tearDown();
     }
+
+    public function dump()
+    {
+        $content = $this->response->getContent();
+
+        $json = json_decode($content);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $content = $json;
+        }
+
+        dd($content);
+    }
+
 }

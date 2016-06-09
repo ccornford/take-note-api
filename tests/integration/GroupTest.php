@@ -28,13 +28,23 @@ class GroupTest extends TestCase
     }
 
     /** @test */
-    function gets_group_with_id_of_1()
+    function gets_group_with_specific_id()
     {
-        factory(Group::class, 1)->create();
+        $group = factory(Group::class, 1)->create();
 
-        $response = $this->call('GET', 'api/groups/{$group->id}');
+        $response = $this->call('GET', "api/groups/{$group->id}");
 
         $this->assertEquals(200, $response->status());
+    }
+
+    /** @test */
+    function returns_404_if_group_cant_be_found()
+    {
+        $group = factory(Group::class, 1)->create();
+
+        $response = $this->call('GET', "api/groups/5");
+
+        $this->assertEquals(404, $response->status());
     }
 
     /** @test */
@@ -43,5 +53,24 @@ class GroupTest extends TestCase
         $response = $this->call('POST', 'api/groups', ['name' => 'Sally']);
 
         $this->assertEquals(201, $response->status());
+    }
+    /** @test */
+    function deletes_group_by_id()
+    {
+        $group = factory(Group::class, 1)->create();
+
+        $response = $this->call('DELETE', "api/groups/{$group->id}");
+
+        $this->assertEquals(200, $response->status());
+    }
+
+    /** @test */
+    function returns_404_if_cant_find_group_to_delete()
+    {
+        $group = factory(Group::class, 3)->create();
+
+        $response = $this->call('DELETE', "api/groups/10");
+
+        $this->assertEquals(404, $response->status());
     }
 }

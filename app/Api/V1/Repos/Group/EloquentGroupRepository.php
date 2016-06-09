@@ -30,8 +30,13 @@ class EloquentGroupRepository extends EloquentRepository implements GroupReposit
     public function findAndDelete($id)
     {
         $group = $this->findOrFail($id);
-        $group->delete();
 
-        return true;
+        if( $group )
+        {
+            $group->delete();
+            return true;
+        }
+
+        return false;
     }
 }
