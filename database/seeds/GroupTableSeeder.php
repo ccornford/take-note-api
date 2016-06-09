@@ -7,11 +7,8 @@ class GroupTableSeeder extends Seeder {
 
 	public function run()
 	{
-		//DB::table('groups')->delete();
+		DB::table('groups')->delete();
 
-		// GroupsSeeder
-		Group::create(array(
-				'name' => 'Group 1'
-			));
+		factory(Group::class, 5)->create();
 	}
 }

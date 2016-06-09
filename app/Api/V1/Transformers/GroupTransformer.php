@@ -8,6 +8,6 @@ class GroupTransformer extends TransformerAbstract
 
     public function transform(Group $group)
     {
-        return $group;
+        return array($group);
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Api\V1\Repos\Group\EloquentGroupRepository as GroupRepository;
 use App\Api\V1\Transformers\GroupTransformer;
+use Illuminate\Http\Request;
 
 class GroupController extends ApiController {
 
@@ -13,79 +14,64 @@ class GroupController extends ApiController {
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * @return \Dingo\Api\Http\Response
      */
     public function index()
     {
-        $groups = $this->groupRepository->getAll();
+        $groups = $this->groupRepository->all();
 
         return $this->response->collection($groups, new GroupTransformer);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
+     * @param Request $request
+     * @return \Dingo\Api\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
 
+        $this->groupRepository->create($request->all());
+
+        return $this->response->created();
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
-    public function store()
-    {
-
-    }
-
-    /**
-     * Display the specified resource.
-     *
      * @param  int  $id
      * @return Response
      */
     public function show($id)
     {
+        $group = $this->groupRepository->findOrFail($id);
 
+        return $this->response->item($group, new GroupTransformer);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
+     * @param Request $request
+     * @param $id
+     * @return \Dingo\Api\Http\Response
      */
-    public function edit($id)
+    public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
 
+        $group = $this->groupRepository->findOrFail($id);
+        $group->update($request);
+
+        return $this->response->item($group, new GroupTransformer);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
      * @param  int  $id
-     * @return Response
-     */
-    public function update($id)
-    {
-
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
      */
     public function destroy($id)
     {
-
+        $this->groupRepository->findAndDelete($id);
     }
 
 }

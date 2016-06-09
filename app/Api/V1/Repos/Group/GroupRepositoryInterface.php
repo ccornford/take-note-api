@@ -2,6 +2,12 @@
 
 interface GroupRepositoryInterface {
 
-    public function getAll();
+    public function all();
+
+    public function findOrFail($id);
+
+    public function create($input);
+
+    public function findAndDelete($id);
 
 }
