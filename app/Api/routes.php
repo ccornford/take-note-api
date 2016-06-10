@@ -10,4 +10,12 @@ $api->version('v1', [
     $api->post('groups', 'GroupController@create');
     $api->put('groups/{groupId}', 'GroupController@update');
     $api->delete('groups/{groupId}', 'GroupController@destroy');
+
+    $api->group(['prefix' => 'groups/{groupId}'], function($api) {
+        $api->get('notes', 'NoteController@index');
+        $api->get('notes/{noteId}', 'NoteController@show');
+        $api->post('notes', 'NoteController@create');
+        $api->put('notes/{noteId}', 'NoteController@update');
+        $api->delete('notes/{noteId}', 'NoteController@destroy');
+    });
 });

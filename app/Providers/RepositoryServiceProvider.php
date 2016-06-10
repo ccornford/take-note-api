@@ -8,7 +8,8 @@ class RepositoryServiceProvider extends ServiceProvider {
 
     public function register() {
         $models = array(
-            'Group'
+            'Group',
+            'Note'
         );
 
         foreach ($models as $model) {
