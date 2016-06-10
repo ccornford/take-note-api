@@ -1,13 +1,7 @@
 <?php namespace App\Api\V1\Repos\Group;
 
-interface GroupRepositoryInterface {
+use App\Api\V1\Repos\RepositoryInterface;
 
-    public function all();
-
-    public function findOrFail($id);
-
-    public function create($input);
-
-    public function findAndDelete($id);
+interface GroupRepositoryInterface extends RepositoryInterface {
 
 }
