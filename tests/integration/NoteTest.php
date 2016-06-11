@@ -10,20 +10,18 @@ class NoteTest extends TestCase
     /** @test */
     function get_all_notes_for_a_group()
     {
-        $group = factory(Models\Group::class, 1)->create();
+        factory(Models\Group::class, 1)->create();
+        factory(Models\Note::class, 3)->create(['group_id' => 2]);
+        factory(Models\Note::class, 3)->create(['group_id' => 1]);
 
-        $notes = factory(Models\Note::class, 3)->create(['group_id' => 1]);
-        foreach($notes as $note)
-        {
-            $this->json('GET', 'api/groups/1/notes')
-                ->seeJson(['group_id' => '1']);
-        }
+        $this->json('GET', 'api/groups/1/notes')
+            ->seeJson(['group_id' => '1'])
+            ->dontSeeJson(['group_id' => '2'])
+            ->assertResponseOk();
 
         $response = $this->call('GET', 'api/groups/1/notes');
 
         $this->assertCount(3, json_decode($response->getContent()));
-
-        $this->assertResponseOk();
     }
 
 }

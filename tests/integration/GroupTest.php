@@ -12,19 +12,18 @@ class GroupTest extends TestCase
     {
         $amountGroups = 3;
 
-        $users = factory(Group::class, $amountGroups)->create();
-
-        foreach($users as $user)
+        $groups = factory(Group::class, $amountGroups)->create();
+        foreach($groups as $group)
         {
             $this->json('GET', 'api/groups')
-                ->seeJson($user->toArray());
+                ->seeJson($group->toArray());
         }
 
         $response = $this->call('GET', 'api/groups');
 
         $this->assertCount($amountGroups, json_decode($response->getContent()));
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseOk();
     }
 
     /** @test */
@@ -32,9 +31,12 @@ class GroupTest extends TestCase
     {
         $group = factory(Group::class, 1)->create();
 
+        $this->json('GET', 'api/groups')
+            ->seeJson($group->toArray());
+
         $response = $this->call('GET', "api/groups/{$group->id}");
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseOk();
     }
 
     /** @test */
@@ -44,7 +46,7 @@ class GroupTest extends TestCase
 
         $response = $this->call('GET', "api/groups/5");
 
-        $this->assertEquals(404, $response->status());
+        $this->assertResponseStatus(404);
     }
 
     /** @test */
@@ -52,8 +54,19 @@ class GroupTest extends TestCase
     {
         $response = $this->call('POST', 'api/groups', ['name' => 'Sally']);
 
-        $this->assertEquals(201, $response->status());
+        $this->assertResponseStatus(201);
     }
+
+    ///** @test */
+    //function throws_error_because_name_is_required()
+    //{
+    //    $response = $this->call('POST', 'api/groups', []);
+    //
+    //   // dd($response->getContent());
+    //
+    //    $this->assertEquals(500, $response->status());
+    //}
+
     /** @test */
     function deletes_group_by_id()
     {
@@ -61,7 +74,7 @@ class GroupTest extends TestCase
 
         $response = $this->call('DELETE', "api/groups/{$group->id}");
 
-        $this->assertEquals(200, $response->status());
+        $this->assertResponseOk();
     }
 
     /** @test */
@@ -71,6 +84,6 @@ class GroupTest extends TestCase
 
         $response = $this->call('DELETE', "api/groups/10");
 
-        $this->assertEquals(404, $response->status());
+        $this->assertResponseStatus(404);
     }
 }

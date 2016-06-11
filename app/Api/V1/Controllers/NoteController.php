@@ -14,11 +14,12 @@ class NoteController extends ApiController {
     }
 
     /**
+     * @param $groupId
      * @return \Dingo\Api\Http\Response
      */
-    public function index()
+    public function index($groupId)
     {
-        $notes = $this->noteRepository->all();
+        $notes = $this->noteRepository->belongsToGroup($groupId);
 
         return $this->response->collection($notes, new NoteTransformer);
     }
@@ -27,7 +28,7 @@ class NoteController extends ApiController {
      * @param Request $request
      * @return \Dingo\Api\Http\Response
      */
-    public function create(Request $request)
+    public function create($groupId, Request $request)
     {
         $this->validate($request, [
             'name' => 'required'

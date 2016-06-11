@@ -12,4 +12,10 @@ class EloquentNoteRepository extends EloquentRepository implements NoteRepositor
         $this->model = $model;
     }
 
+    public function belongsToGroup($id)
+    {
+        //TODO find group first and throw 404 if it doesn't exist
+        return $this->model->whereGroupId($id)->get();
+    }
+
 }
