@@ -14,8 +14,7 @@ class EloquentNoteRepository extends EloquentRepository implements NoteRepositor
 
     public function belongsToGroup($id)
     {
-        //TODO find group first and throw 404 if it doesn't exist
-        return $this->model->whereGroupId($id)->get();
+        return $this->model->where('group_id', $id)->get();
     }
 
 }

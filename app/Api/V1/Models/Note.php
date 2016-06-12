@@ -6,7 +6,7 @@ class Note extends Model {
 
 	protected $table = 'notes';
 	public $timestamps = true;
-	protected $fillable = array('name');
+	protected $fillable = array('name', 'group_id');
 
 	public function group()
 	{

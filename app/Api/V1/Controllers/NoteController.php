@@ -21,6 +21,11 @@ class NoteController extends ApiController {
     {
         $notes = $this->noteRepository->belongsToGroup($groupId);
 
+        if(count($notes) == 0)
+        {
+            return $this->response->errorNotFound();
+        }
+
         return $this->response->collection($notes, new NoteTransformer);
     }
 
@@ -28,9 +33,10 @@ class NoteController extends ApiController {
      * @param Request $request
      * @return \Dingo\Api\Http\Response
      */
-    public function create($groupId, Request $request)
+    public function create(Request $request)
     {
         $this->validate($request, [
+            'group_id' => 'required',
             'name' => 'required'
         ]);
 
@@ -77,7 +83,7 @@ class NoteController extends ApiController {
      */
     public function destroy($id)
     {
-        if( ! $this->noteRepository->findAndDelete($id))
+        if( ! $this->noteRepository->findAndDelete($id) )
         {
             return $this->response->errorNotFound();
         }

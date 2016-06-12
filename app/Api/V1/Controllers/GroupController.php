@@ -76,7 +76,7 @@ class GroupController extends ApiController {
      */
     public function destroy($id)
     {
-        if( ! $this->groupRepository->findAndDelete($id))
+        if( ! $this->groupRepository->findAndDelete($id) )
         {
             return $this->response->errorNotFound();
         }
