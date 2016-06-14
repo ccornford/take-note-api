@@ -14,3 +14,9 @@ $factory->define(Models\Note::class, function ($faker) {
        'group_id' => 1
    ];
 });
+
+$factory->define(Models\Tag::class, function ($faker) {
+    return [
+        'name' => $faker->sentence,
+    ];
+});

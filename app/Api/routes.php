@@ -18,4 +18,10 @@ $api->version('v1', [
         $api->put('notes/{noteId}', 'NoteController@update');
         $api->delete('notes/{noteId}', 'NoteController@destroy');
     });
+
+    $api->get('tags', 'TagController@index');
+    $api->get('tags/{tagId}', 'TagController@show');
+    $api->post('tags', 'TagController@create');
+    $api->put('tags/{tagId}', 'TagController@update');
+    $api->delete('tags/{tagId}', 'TagController@destroy');
 });

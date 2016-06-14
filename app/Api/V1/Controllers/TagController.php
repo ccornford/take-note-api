@@ -1,32 +1,27 @@
 <?php namespace App\Api\V1\Controllers;
 
-use App\Api\V1\Repos\Note\EloquentNoteRepository as NoteRepository;
-use App\Api\V1\Transformers\NoteTransformer;
+use App\Api\V1\Repos\Tag\EloquentTagRepository as TagRepository;
+use App\Api\V1\Transformers\TagTransformer;
 use Illuminate\Http\Request;
 
-class NoteController extends ApiController {
+class TagController extends ApiController {
 
-    private $noteRepository;
+    private $tagRepository;
 
-    public function __construct(NoteRepository $noteRepository)
+    public function __construct(TagRepository $tagRepository)
     {
-        $this->noteRepository = $noteRepository;
+        $this->tagRepository = $tagRepository;
     }
 
     /**
      * @param $groupId
      * @return \Dingo\Api\Http\Response
      */
-    public function index($groupId)
+    public function index()
     {
-        $notes = $this->noteRepository->belongsToGroup($groupId);
+        $tags = $this->tagRepository->all();
 
-        if(count($notes) == 0)
-        {
-            return $this->response->errorNotFound();
-        }
-
-        return $this->response->collection($notes, new NoteTransformer);
+        return $this->response->collection($tags, new TagTransformer);
     }
 
     /**
@@ -36,11 +31,10 @@ class NoteController extends ApiController {
     public function create(Request $request)
     {
         $this->validate($request, [
-            'group_id' => 'required',
             'name' => 'required'
         ]);
 
-        $this->noteRepository->create($request->all());
+        $this->tagRepository->create($request->all());
 
         return $this->response->created();
     }
@@ -51,14 +45,14 @@ class NoteController extends ApiController {
      */
     public function show($id)
     {
-        $note = $this->noteRepository->findOrFail($id);
+        $tag = $this->tagRepository->findOrFail($id);
 
-        if( ! $note )
+        if( ! $tag )
         {
             return $this->response->errorNotFound();
         }
 
-        return $this->response->item($note, new NoteTransformer);
+        return $this->response->item($tag, new TagTransformer);
     }
 
     /**
@@ -72,10 +66,10 @@ class NoteController extends ApiController {
             'name' => 'required'
         ]);
 
-        $note = $this->noteRepository->findOrFail($id);
-        $note->update($request);
+        $tag = $this->tagRepository->findOrFail($id);
+        $tag->update($request);
 
-        return $this->response->item($note, new NoteTransformer);
+        return $this->response->item($tag, new TagTransformer);
     }
 
     /**
@@ -83,7 +77,7 @@ class NoteController extends ApiController {
      */
     public function destroy($id)
     {
-        if( ! $this->noteRepository->findAndDelete($id))
+        if( ! $this->tagRepository->findAndDelete($id))
         {
             return $this->response->errorNotFound();
         }
