@@ -96,8 +96,8 @@ $app->register(App\Providers\RepositoryServiceProvider::class);
 |
 */
 
-$app->group(['namespace' => 'App\Api\Controllers'], function ($app) {
-    require __DIR__.'/../app/Api/routes.php';
+$app->group(['namespace' => 'App\Api\V1\Controllers'], function ($app) {
+    require __DIR__.'/../app/Api/V1/routes.php';
 });
 
 return $app;

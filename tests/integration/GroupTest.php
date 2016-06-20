@@ -57,16 +57,6 @@ class GroupTest extends TestCase
         $this->assertResponseStatus(201);
     }
 
-    ///** @test */
-    //function throws_error_because_name_is_required()
-    //{
-    //    $response = $this->call('POST', 'api/groups', []);
-    //
-    //   // dd($response->getContent());
-    //
-    //    $this->assertEquals(500, $response->status());
-    //}
-
     /** @test */
     function updates_group_name()
     {
