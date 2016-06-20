@@ -2,7 +2,9 @@
 
 use App\Api\V1\Repos\Group\EloquentGroupRepository as GroupRepository;
 use App\Api\V1\Transformers\GroupTransformer;
+use Dingo\Api\Exception\UpdateResourceFailedException;
 use Illuminate\Http\Request;
+use Validator;
 
 class GroupController extends ApiController {
 
@@ -46,11 +48,6 @@ class GroupController extends ApiController {
     {
         $group = $this->groupRepository->findOrFail($id);
 
-        if( ! $group )
-        {
-            return $this->response->errorNotFound();
-        }
-
         return $this->response->item($group, new GroupTransformer);
     }
 
@@ -61,12 +58,15 @@ class GroupController extends ApiController {
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required'
         ]);
 
-        $group = $this->groupRepository->findOrFail($id);
-        $group->update($request);
+        if ($validator->fails()) {
+            throw new UpdateResourceFailedException('Could not update group.', $validator->errors());
+        }
+
+        $group = $this->groupRepository->findAndUpdate($id, $request->all());
 
         return $this->response->item($group, new GroupTransformer);
     }
@@ -81,5 +81,4 @@ class GroupController extends ApiController {
             return $this->response->errorNotFound();
         }
     }
-
 }

@@ -1,5 +1,8 @@
 <?php namespace App\Api\V1\Repos;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 abstract class EloquentRepository implements RepositoryInterface
 {
     public function all()
@@ -9,7 +12,23 @@ abstract class EloquentRepository implements RepositoryInterface
 
     public function findOrFail($id)
     {
-        return $this->model->find($id);
+        try
+        {
+            return $this->model->findOrFail($id);
+        }
+        catch(ModelNotFoundException $e)
+        {
+            throw new NotFoundHttpException;
+        }
+    }
+
+    public function findAndUpdate($id, $request)
+    {
+        $group = $this->findOrFail($id);
+
+        $group->update($request);
+
+        return $group;
     }
 
     public function create($input)

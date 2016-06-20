@@ -68,6 +68,28 @@ class GroupTest extends TestCase
     //}
 
     /** @test */
+    function updates_group_name()
+    {
+        $group = factory(Group::class, 1)->create();
+
+        $response = $this->call('PUT', "api/groups/1", ['name' => 'Name was updated']);
+
+        $this->json('GET', "api/groups/1")
+            ->seeJson(['name' => 'Name was updated'])
+            ->assertResponseOk();
+    }
+
+    /** @test */
+    function update_throws_validation_error()
+    {
+        $group = factory(Group::class, 1)->create();
+
+        $response = $this->call('PUT', "api/groups/1", ['name' => '']);
+
+        $this->assertResponseStatus(422);
+    }
+
+    /** @test */
     function deletes_group_by_id()
     {
         $group = factory(Group::class, 1)->create();

@@ -6,6 +6,8 @@ interface RepositoryInterface {
 
     public function findOrFail($id);
 
+    public function findAndUpdate($id, $request);
+
     public function create($input);
 
     public function findAndDelete($id);
