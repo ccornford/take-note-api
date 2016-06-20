@@ -2,7 +2,7 @@
 
 use App\Api\V1\Repos\Group\EloquentGroupRepository as GroupRepository;
 use App\Api\V1\Transformers\GroupTransformer;
-use Dingo\Api\Exception\UpdateResourceFailedException;
+use Dingo\Api\Exception as DingoException;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -28,12 +28,17 @@ class GroupController extends ApiController {
     /**
      * @param Request $request
      * @return \Dingo\Api\Http\Response
+     * @throws StoreResourceFailedException
      */
     public function create(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            throw new DingoException\StoreResourceFailedException('Could not create group.', $validator->errors());
+        }
 
         $this->groupRepository->create($request->all());
 
@@ -63,7 +68,7 @@ class GroupController extends ApiController {
         ]);
 
         if ($validator->fails()) {
-            throw new UpdateResourceFailedException('Could not update group.', $validator->errors());
+            throw new DingoException\UpdateResourceFailedException('Could not update group.', $validator->errors());
         }
 
         $group = $this->groupRepository->findAndUpdate($id, $request->all());
@@ -72,13 +77,13 @@ class GroupController extends ApiController {
     }
 
     /**
-     * @param  int  $id
+     * @param $id
+     * @return bool
      */
     public function destroy($id)
     {
-        if( ! $this->groupRepository->findAndDelete($id) )
-        {
-            return $this->response->errorNotFound();
-        }
+        $this->groupRepository->findAndDelete($id);
+
+        return $this->response->noContent();
     }
 }

@@ -24,11 +24,11 @@ abstract class EloquentRepository implements RepositoryInterface
 
     public function findAndUpdate($id, $request)
     {
-        $group = $this->findOrFail($id);
+        $resource = $this->findOrFail($id);
 
-        $group->update($request);
+        $resource->update($request);
 
-        return $group;
+        return $resource;
     }
 
     public function create($input)
@@ -38,14 +38,9 @@ abstract class EloquentRepository implements RepositoryInterface
 
     public function findAndDelete($id)
     {
-        $group = $this->findOrFail($id);
+        $resource = $this->findOrFail($id);
+        $resource->delete();
 
-        if( $group )
-        {
-            $group->delete();
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }

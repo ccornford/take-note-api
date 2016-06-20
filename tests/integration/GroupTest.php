@@ -86,7 +86,7 @@ class GroupTest extends TestCase
 
         $response = $this->call('DELETE', "api/groups/{$group->id}");
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(204);
     }
 
     /** @test */

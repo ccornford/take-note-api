@@ -53,10 +53,9 @@ class NoteTest extends TestCase
         $group = factory(Models\Group::class, 1)->create();
         factory(Models\Note::class, 3)->create(['group_id' => $group->id]);
 
-
         $response = $this->call('DELETE', "api/groups/{$group->id}/notes/1");
 
-        $this->assertResponseOk();
+        $this->assertResponseStatus(204);
     }
 
 }

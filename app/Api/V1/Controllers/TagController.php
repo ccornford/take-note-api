@@ -2,7 +2,9 @@
 
 use App\Api\V1\Repos\Tag\EloquentTagRepository as TagRepository;
 use App\Api\V1\Transformers\TagTransformer;
+use Dingo\Api\Exception as DingoException;
 use Illuminate\Http\Request;
+use Validator;
 
 class TagController extends ApiController {
 
@@ -30,9 +32,13 @@ class TagController extends ApiController {
      */
     public function create(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            throw new DingoException\StoreResourceFailedException('Could not create tag.', $validator->errors());
+        }
 
         $this->tagRepository->create($request->all());
 
@@ -47,11 +53,6 @@ class TagController extends ApiController {
     {
         $tag = $this->tagRepository->findOrFail($id);
 
-        if( ! $tag )
-        {
-            return $this->response->errorNotFound();
-        }
-
         return $this->response->item($tag, new TagTransformer);
     }
 
@@ -62,25 +63,28 @@ class TagController extends ApiController {
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+        $validator = Validate::make($request->all(), [
             'name' => 'required'
         ]);
 
-        $tag = $this->tagRepository->findOrFail($id);
-        $tag->update($request);
+        if ($validator->fails()) {
+            throw new DingoException\UpdateResourceFailedException('Could not update tag.', $validator->errors());
+        }
+
+        $tag = $this->tagRepository->findAndUpdate($id);
 
         return $this->response->item($tag, new TagTransformer);
     }
 
     /**
-     * @param  int  $id
+     * @param $id
+     * @return \Dingo\Api\Http\Response
      */
     public function destroy($id)
     {
-        if( ! $this->tagRepository->findAndDelete($id))
-        {
-            return $this->response->errorNotFound();
-        }
+        $this->tagRepository->findAndDelete($id);
+
+        return $this->response->noContent();
     }
 
 }

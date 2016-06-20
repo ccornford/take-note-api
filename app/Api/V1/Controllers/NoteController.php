@@ -2,7 +2,9 @@
 
 use App\Api\V1\Repos\Note\EloquentNoteRepository as NoteRepository;
 use App\Api\V1\Transformers\NoteTransformer;
+use Dingo\Api\Exception as DingoException;
 use Illuminate\Http\Request;
+use Validator;
 
 class NoteController extends ApiController {
 
@@ -35,10 +37,14 @@ class NoteController extends ApiController {
      */
     public function create(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'group_id' => 'required',
             'name' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            throw new DingoException\StoreResourceFailedException('Could not create note.', $validator->errors());
+        }
 
         $this->noteRepository->create($request->all());
 
@@ -53,11 +59,6 @@ class NoteController extends ApiController {
     {
         $note = $this->noteRepository->findOrFail($id);
 
-        if( ! $note )
-        {
-            return $this->response->errorNotFound();
-        }
-
         return $this->response->item($note, new NoteTransformer);
     }
 
@@ -65,28 +66,32 @@ class NoteController extends ApiController {
      * @param Request $request
      * @param $id
      * @return \Dingo\Api\Http\Response
+     * @throws UpdateResourceFailedException
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
+        $validator = Validate::make($request->all(), [
             'name' => 'required'
         ]);
 
-        $note = $this->noteRepository->findOrFail($id);
-        $note->update($request);
+        if ($validator->fails()) {
+            throw new DingoException\UpdateResourceFailedException('Could not update note.', $validator->errors());
+        }
+
+        $note = $this->noteRepository->findAndUpdate($id, $request->all());
 
         return $this->response->item($note, new NoteTransformer);
     }
 
     /**
-     * @param  int  $id
+     * @param $id
+     * @return \Dingo\Api\Http\Response
      */
     public function destroy($id)
     {
-        if( ! $this->noteRepository->findAndDelete($id))
-        {
-            return $this->response->errorNotFound();
-        }
+        $this->noteRepository->findAndDelete($id);
+
+        return $this->response->noContent();
     }
 
 }
