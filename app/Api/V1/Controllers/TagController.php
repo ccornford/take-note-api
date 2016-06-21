@@ -16,7 +16,6 @@ class TagController extends ApiController {
     }
 
     /**
-     * @param $groupId
      * @return \Dingo\Api\Http\Response
      */
     public function index()
