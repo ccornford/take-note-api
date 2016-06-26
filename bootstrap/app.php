@@ -27,6 +27,11 @@ $app->withFacades();
 
 $app->withEloquent();
 
+// Register config files
+$app->configure('auth');
+$app->configure('jwt');
+$app->configure('cors');
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -59,9 +64,11 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
+ $app->middleware([
 //    App\Http\Middleware\ExampleMiddleware::class
-// ]);
+     Barryvdh\Cors\HandleCors::class,
+     Barryvdh\Cors\HandlePreflightSimple::class
+ ]);
 
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
@@ -80,6 +87,16 @@ $app->singleton(
 
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 $app->register(App\Providers\RepositoryServiceProvider::class);
+
+
+$app->register(Dingo\Api\Provider\LumenServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+
+app('Dingo\Api\Auth\Auth')->extend('jwt', function ($app) {
+    return new Dingo\Api\Auth\Provider\JWT($app['Tymon\JWTAuth\JWTAuth']);
+});
+
+$app->register(Barryvdh\Cors\LumenServiceProvider::class);
 
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);

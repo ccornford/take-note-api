@@ -2,8 +2,11 @@
 
 $api = app('Dingo\Api\Routing\Router');
 
+// JWT Protected routes
 $api->version('v1', [
-    'namespace' => 'App\Api\V1\Controllers'
+    'namespace' => 'App\Api\V1\Controllers',
+    //'middleware' => 'api.auth',
+    //'providers' => 'jwt'
 ], function ($api) {
     $api->get('groups', 'GroupController@index');
     $api->get('groups/{groupId}', 'GroupController@show');
@@ -27,4 +30,9 @@ $api->version('v1', [
     $api->put('tags/{tagId}', 'TagController@update');
     $api->delete('tags/{tagId}', 'TagController@destroy');
 
+});
+
+// Publicly accessible routes
+$api->version('v1', ['namespace' => 'App\Api\V1\Controllers'], function ($api) {
+    $api->post('/authenticate', 'AuthenticateController@backend');
 });
