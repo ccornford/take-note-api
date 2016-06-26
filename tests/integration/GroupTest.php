@@ -98,4 +98,26 @@ class GroupTest extends TestCase
 
         $this->assertResponseStatus(404);
     }
+
+    /** @test */
+    function searching_returns_all_matching_results_based_on_name()
+    {
+        $groups = factory(Group::class, 3)->create();
+
+        foreach($groups as $group) {
+            $this->json('POST', 'api/groups/search', ['q' => $groups[1]->name])
+                ->seeJson($group->toArray())
+                ->assertResponseOk();
+        }
+    }
+
+    /** @test */
+    function searching_returns_204_when_no_results_found()
+    {
+        $groups = factory(Group::class, 3)->create();
+
+        $response = $this->call('POST', 'api/groups/search', ['q' => 'thisshouldfail']);
+
+        $this->assertResponseStatus(204);
+    }
 }

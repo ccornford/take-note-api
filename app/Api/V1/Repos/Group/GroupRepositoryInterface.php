@@ -4,4 +4,6 @@ use App\Api\V1\Repos\RepositoryInterface;
 
 interface GroupRepositoryInterface extends RepositoryInterface {
 
+    public function search($params);
+
 }

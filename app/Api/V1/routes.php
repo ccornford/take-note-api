@@ -11,6 +11,8 @@ $api->version('v1', [
     $api->put('groups/{groupId}', 'GroupController@update');
     $api->delete('groups/{groupId}', 'GroupController@destroy');
 
+    $api->post('groups/search', 'SearchController@search');
+
     $api->group(['prefix' => 'groups/{groupId}'], function($api) {
         $api->get('notes', 'NoteController@index');
         $api->get('notes/{noteId}', 'NoteController@show');
@@ -24,4 +26,5 @@ $api->version('v1', [
     $api->post('tags', 'TagController@create');
     $api->put('tags/{tagId}', 'TagController@update');
     $api->delete('tags/{tagId}', 'TagController@destroy');
+
 });

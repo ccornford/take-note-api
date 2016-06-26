@@ -12,4 +12,18 @@ class EloquentGroupRepository extends EloquentRepository implements GroupReposit
         $this->model = $model;
     }
 
+    public function search($param)
+    {
+        $results = $this->model->with('notes', 'tags')
+            ->where("name", "like", "%{$param}%")
+            ->get();
+
+        if($results->count() == 0)
+        {
+            return abort(204);
+        }
+
+        return $results;
+    }
+
 }
