@@ -8,7 +8,7 @@ class TagTransformer extends TransformerAbstract
 
     public function transform(Tag $tag)
     {
-        return array($tag);
+        return $tag->toArray();
     }
 
 }

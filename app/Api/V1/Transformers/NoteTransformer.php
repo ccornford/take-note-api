@@ -8,7 +8,7 @@ class NoteTransformer extends TransformerAbstract
 
     public function transform(Note $note)
     {
-        return array($note);
+        return $note->toArray();
     }
 
 }

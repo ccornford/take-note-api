@@ -8,6 +8,6 @@ class SearchTransformer extends TransformerAbstract
 
     public function transform(Group $group)
     {
-        return array($group);
+        return $group->toArray();
     }
 }
